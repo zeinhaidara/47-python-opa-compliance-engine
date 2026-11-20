@@ -1,0 +1,5 @@
+{
+  "resources": [
+    {"id": "vol-0aaaaaaaaaaaaaaa1", "type": "aws_ebs_volume", "config": {"encrypted": true}}
+  ]
+}

@@ -1,0 +1,41 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  OPA_VERSION: v1.22.4
+  # sha256 of opa_linux_amd64_static, from the release's .sha256 file
+  OPA_SHA256: 35e3b352e715e80624ead6c89930d8585f6f7d94cdc409eb2a9fe36620dcccba
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Install opa (sha256 checked)
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/bin"
+          curl -sSfLo "$RUNNER_TEMP/bin/opa" "https://github.com/open-policy-agent/opa/releases/download/${OPA_VERSION}/opa_linux_amd64_static"
+          echo "${OPA_SHA256}  $RUNNER_TEMP/bin/opa" | sha256sum --check --strict
+          chmod +x "$RUNNER_TEMP/bin/opa"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+      - run: opa version
+      - run: opa fmt --fail --list policies
+      - run: opa check --strict policies
+      - run: opa test -v policies
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m ruff check .
+      - run: python -m ruff format --check .
+      - run: python -m pytest -q

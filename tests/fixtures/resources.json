@@ -1,0 +1,15 @@
+{
+  "resources": [
+    {"id": "arn:aws:s3:::reports-example-com", "type": "aws_s3_bucket", "config": {
+      "public_access_block": {"block_public_acls": true, "block_public_policy": true, "ignore_public_acls": true, "restrict_public_buckets": true},
+      "encryption": {"enabled": true}, "logging": {"enabled": true}}},
+    {"id": "arn:aws:s3:::public-assets-example-com", "type": "aws_s3_bucket", "config": {
+      "public_access_block": {"block_public_acls": false, "block_public_policy": false, "ignore_public_acls": false, "restrict_public_buckets": false},
+      "encryption": {"enabled": true}, "logging": {"enabled": false}}},
+    {"id": "vol-0123456789abcdef0", "type": "aws_ebs_volume", "config": {"encrypted": false}},
+    {"id": "sg-0123456789abcdef0", "type": "aws_security_group", "config": {
+      "ingress": [{"from_port": 22, "to_port": 22, "cidrs": ["0.0.0.0/0"]}]}},
+    {"id": "arn:aws:iam::123456789012:user/alice", "type": "aws_iam_user", "config": {"console_access": true, "mfa_enabled": false}},
+    {"id": "arn:aws:iam::123456789012:user/bob", "type": "aws_iam_user", "config": {"console_access": true, "mfa_enabled": true}}
+  ]
+}

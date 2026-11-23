@@ -21,6 +21,11 @@ runner that calls `opa eval` and writes a Markdown report with **pass**,
 > evaluates cloud resource configurations against an internal compliance
 > framework (SOC2, ISO 27001 controls).
 
+Why it matters: compliance evidence is often collected by hand from
+screenshots once a year. Rules that run against resource data, and a report
+that maps each result to a control ID, make the check repeatable and show
+which controls are failing today.
+
 ## How it works
 
 ```mermaid
